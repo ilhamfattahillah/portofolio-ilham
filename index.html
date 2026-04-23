@@ -1,148 +1,366 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portofolio Ilham</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="js/main.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofolio || Ilham</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Poppins', 'sans-serif'] },
+          colors: {
+            bg:      '#0f0f13',
+            bg2:     '#16161d',
+            bg3:     '#1c1c25',
+            accent:  '#5b6ef5',
+            accent2: '#7e8eff',
+            muted:   '#7a7a92',
+          },
+          keyframes: {
+            float:  { '0%,100%': { transform: 'translateY(0)'   }, '50%': { transform: 'translateY(-10px)' } },
+            float2: { '0%,100%': { transform: 'translateY(0)'   }, '50%': { transform: 'translateY(10px)'  } },
+            blink:  { '0%,100%': { opacity: '1' }, '50%': { opacity: '0.2' } },
+          },
+          animation: {
+            float:  'float 5s ease-in-out infinite',
+            float2: 'float2 7s ease-in-out infinite',
+            blink:  'blink 2.5s ease-in-out infinite',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- minimal custom CSS hanya untuk hal yg tidak bisa Tailwind handle -->
+  <style>
+    .fade-up { opacity:0; transform:translateY(28px); transition:opacity .55s ease,transform .55s ease; }
+    .fade-up.visible { opacity:1; transform:translateY(0); }
+
+    .project-card { transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease; }
+    .project-card:hover { transform:translateY(-5px); border-color:rgba(91,110,245,.35)!important; box-shadow:0 14px 40px rgba(0,0,0,.4); }
+
+    .skill-item { transition:transform .18s ease,border-color .18s ease,background .18s ease; }
+    .skill-item:hover { transform:translateX(5px); border-color:rgba(91,110,245,.35)!important; background:rgba(91,110,245,.05)!important; }
+
+    .contact-item { transition:transform .2s ease,border-color .2s ease; }
+    .contact-item:hover { transform:translateY(-3px); border-color:rgba(91,110,245,.35)!important; }
+
+    .modal-bg { opacity:0; pointer-events:none; transition:opacity .25s ease; }
+    .modal-bg.open { opacity:1; pointer-events:all; }
+    .modal-box { transform:scale(.94) translateY(16px); transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+    .modal-bg.open .modal-box { transform:scale(1) translateY(0); }
+
+    .dot-grid { background-image:radial-gradient(rgba(91,110,245,.35) 1.5px,transparent 1.5px); background-size:14px 14px; }
+
+    .ham-line { transition:all .25s ease; display:block; width:22px; height:2px; background:#e8e8f0; border-radius:2px; }
+    .hamburger.open .ham-line:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .hamburger.open .ham-line:nth-child(2) { opacity:0; }
+    .hamburger.open .ham-line:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile { display:none; flex-direction:column; gap:16px; padding:20px 28px; background:rgba(15,15,19,.97); border-bottom:1px solid rgba(255,255,255,.07); }
+    .nav-mobile.open { display:flex; }
+
+    .btn-main  { transition:background .2s,transform .15s; }
+    .btn-main:hover  { background:#7e8eff; transform:translateY(-2px); }
+    .btn-outline { transition:border-color .2s,background .2s,transform .15s; }
+    .btn-outline:hover { border-color:#7e8eff; background:rgba(91,110,245,.07); transform:translateY(-2px); }
+
+    .card-btn { transition:letter-spacing .2s; }
+    .card-btn:hover { letter-spacing:.04em; }
+
+    .nav-link { transition:color .2s; }
+    .nav-link:hover, .nav-link.active { color:#e8e8f0!important; }
+  </style>
 </head>
 
-<body class="bg-gray-900 text-white">
-    <nav class="fixed w-full top-0 left-0 bg-gray-900/80 backdrop-blur z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center p-4">
-    
-         <h1 class="font-bold text-lg">Ilham.</h1>
+<body class="bg-bg text-[#e8e8f0] font-sans antialiased overflow-x-hidden">
 
-            <ul class="flex gap-6 text-sm">
-             <li><a href="#home" class="hover:text-purple-400">Home</a></li>
-             <li><a href="#projects" class="hover:text-purple-400">Projects</a></li>
-             <li><a href="#skills" class="hover:text-purple-400">Skills</a></li>
-             <li><a href="#contact" class="hover:text-purple-400">Contact</a></li>
-            </ul>
+<!-- ════════════════════ NAVBAR ════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 py-[18px] transition-all duration-300" id="navbar">
+  <div class="max-w-[1060px] mx-auto px-7 flex items-center justify-between">
 
-        </div>
-    </nav>  
-    <section id="home" class="h-screen flex items-center justify-center text-center px-4">
-        <div class="home-content">
-    
-         <h1 class="text-4xl md:text-6xl font-bold mb-4">
-             Hi, I'm Ilham
-         </h1>
+    <a href="#home" class="text-xl font-bold tracking-tight hover:text-accent2 transition-colors">ilham.</a>
 
-         <p class="text-gray-400 mb-6">
-            I build modern and interactive web experiences
-         </p>
+    <ul class="hidden md:flex gap-8 list-none">
+      <li><a href="#about"    class="nav-link text-sm font-medium text-muted">about</a></li>
+      <li><a href="#projects" class="nav-link text-sm font-medium text-muted">projects</a></li>
+      <li><a href="#skills"   class="nav-link text-sm font-medium text-muted">skills</a></li>
+      <li><a href="#contact"  class="nav-link text-sm font-medium text-muted">contact</a></li>
+    </ul>
 
-         <a href="#projects" class="bg-purple-500 px-6 py-3 rounded-full hover:bg-purple-600 transition">
-           Explore My Work
-         </a>
+    <button class="hamburger md:hidden flex flex-col gap-[5px] bg-transparent border-none cursor-pointer p-1" id="hamburger" aria-label="menu">
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+      <span class="ham-line"></span>
+    </button>
+  </div>
 
-        </div>
-    </section>
-    <section class="py-20 px-4 bg-gray-900 section">
-  <div class="max-w-4xl mx-auto">
+  <ul class="nav-mobile md:hidden list-none" id="navMobile">
+    <li><a href="#about"    class="nav-link text-sm font-medium text-muted">about</a></li>
+    <li><a href="#projects" class="nav-link text-sm font-medium text-muted">projects</a></li>
+    <li><a href="#skills"   class="nav-link text-sm font-medium text-muted">skills</a></li>
+    <li><a href="#contact"  class="nav-link text-sm font-medium text-muted">contact</a></li>
+  </ul>
+</nav>
 
-    <h2 class="text-3xl font-bold text-center mb-16">My Journey</h2>
+<!-- ════════════════════ HERO ════════════════════ -->
+<section id="home" class="min-h-screen flex items-center">
+  <div class="max-w-[1060px] mx-auto px-7 pt-32 pb-20 w-full grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 items-center">
 
-    <div class="relative">
-
-      <!-- garis -->
-      <div class="absolute left-1/2 top-0 w-1 bg-gray-700 h-full transform -translate-x-1/2"></div>
-
-      <!-- item -->
-      <div class="timeline-item mb-16 flex justify-between items-center w-full">
-        <div class="w-5/12 text-right">
-          <p class="text-gray-400">2025 - Started learning HTML & CSS</p>
-        </div>
-        <div class="w-2/12 flex justify-center">
-          <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
-        </div>
-        <div class="w-5/12"></div>
+    <div>
+      <p class="text-base text-muted italic mb-1" id="heroHey">hai, saya</p>
+      <h1 class="text-[clamp(60px,10vw,96px)] font-bold leading-none tracking-[-3px] mb-4" id="heroName">Ilham.</h1>
+      <p class="text-base font-medium text-accent2 mb-5" id="heroRole">Web Developer &amp; UI/UX Designer</p>
+      <p class="text-[15px] text-muted leading-relaxed max-w-[400px] mb-9" id="heroDesc">
+        Fokus membangun website yang modern, responsif, dan memberikan pengalaman terbaik bagi pengguna. Berbasis di Bandung, Indonesia.  
+      </p>
+      <div class="flex flex-wrap gap-3" id="heroBtns">
+        <a href="#projects" class="btn-main bg-accent text-white text-sm font-semibold px-6 py-3 rounded-xl">lihat proyek</a>
+        <a href="#contact"  class="btn-outline text-[#e8e8f0] text-sm font-semibold px-6 py-3 rounded-xl border border-white/10">hubungi saya</a>
       </div>
+    </div>
 
-      <div class="timeline-item mb-16 flex justify-between items-center w-full">
-        <div class="w-5/12"></div>
-        <div class="w-2/12 flex justify-center">
-          <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
-        </div>
-        <div class="w-5/12 text-left">
-          <p class="text-gray-400">2025 - Learned JavaScript</p>
-        </div>
-      </div>
-
-      <div class="timeline-item mb-16 flex justify-between items-center w-full">
-        <div class="w-5/12 text-right">
-          <p class="text-gray-400">2026 - Built real projects</p>
-        </div>
-        <div class="w-2/12 flex justify-center">
-          <div class="w-4 h-4 bg-purple-500 rounded-full"></div>
-        </div>
-        <div class="w-5/12"></div>
-      </div>
-
+    <div class="relative w-[180px] h-[220px] hidden md:block" id="heroDeco" aria-hidden="true">
+      <div class="absolute top-0 right-0 w-[110px] h-[110px] rounded-xl border border-accent/25 bg-accent/[0.06] animate-float"></div>
+      <div class="absolute bottom-5 left-0 w-[70px]  h-[70px]  rounded-xl border border-accent/20 bg-accent/[0.04] animate-float2"></div>
+      <div class="dot-grid absolute bottom-0 right-8 w-[80px] h-[80px]"></div>
     </div>
 
   </div>
 </section>
-        </div>
-    </section>
-   <section id="projects" class="py-20 px-4 section">
-     <div class="max-w-6xl mx-auto">
 
-         <h2 class="text-3xl font-bold text-center mb-10">Projects</h2>
+<!-- ════════════════════ ABOUT ════════════════════ -->
+<section id="about" class="border-t border-white/[0.07]">
+  <div class="max-w-[1060px] mx-auto px-7 py-24 grid grid-cols-1 md:grid-cols-[240px_1fr] gap-14 items-start">
 
-        <div class="grid md:grid-cols-3 gap-6">
+    <div class="fade-up">
+      <div class="w-full aspect-[3/4] rounded-2xl bg-bg3 border border-white/[0.07] flex items-center justify-center overflow-hidden">
+        <!-- ganti dengan: <img src="foto-kamu.jpg" alt="Ilham" class="w-full h-full object-cover"> -->
+        <span class="text-5xl font-bold text-accent tracking-[-2px]">IFE</span>
+      </div>
+    </div>
 
-            <div class="bg-gray-900 p-6 rounded-xl hover:scale-105 transition">
-             <h3 class="font-bold mb-2">Project 1</h3>
-             <p class="text-gray-400 text-sm">Description project</p>
-            </div>
-
-            <div class="bg-gray-900 p-6 rounded-xl hover:scale-105 transition">
-             <h3 class="font-bold mb-2">Project 2</h3>
-             <p class="text-gray-400 text-sm">Description project</p>
-            </div>
-
-            <div class="bg-gray-900 p-6 rounded-xl hover:scale-105 transition">
-             <h3 class="font-bold mb-2">Project 3</h3>
-             <p class="text-gray-400 text-sm">Description project</p>
-            </div>
-
-         </div>
-
-     </div>
-    </section>
-    <section id="skills" class="py-20 px-4 bg-gray-900">
-  <div class="max-w-4xl mx-auto text-center">
-
-    <h2 class="text-3xl font-bold mb-10">Skills</h2>
-
-    <div class="flex flex-wrap justify-center gap-4">
-      <span class="bg-gray-800 px-4 py-2 rounded-full">HTML</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">CSS</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">JavaScript</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">Tailwind CSS</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">UI/UX Design</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">Laravel</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">Video Editing</span>
-      <span class="bg-gray-800 px-4 py-2 rounded-full">My SQL</span>
+    <div class="fade-up" style="transition-delay:.1s">
+      <span class="text-[11px] font-semibold tracking-[.18em] uppercase text-accent2">about me</span>
+      <h2 class="text-[clamp(28px,4vw,40px)] font-bold tracking-tight leading-tight mt-2 mb-5">Siapa saya?</h2>
+      <p class="text-[15px] text-muted leading-relaxed mb-4">
+        Saya Ilham, seorang web developer yang memiliki ketertarikan dalam menciptakan tampilan web yang menarik secara visual sekaligus nyaman digunakan.
+        Saya senang mengeksplorasi bagaimana desain dan fungsi bisa berjalan seimbang, sehingga setiap hal yang saya buat tidak hanya terlihat bagus, tetapi juga memberikan pengalaman yang baik bagi pengguna.
+      </p>
+      <p class="text-[15px] text-muted leading-relaxed mb-4">
+        Selain coding, saya juga tertarik pada bidang UI/UX design dan video editing, sebagai bagian dari proses menciptakan karya digital yang lebih utuh dan bermakna.
+      </p>
+      <div class="flex flex-wrap gap-2 mt-6">
+        <span class="text-[13px] font-medium text-muted bg-bg3 border border-white/[0.07] rounded-md px-4 py-[5px]">detail-oriented</span>
+        <span class="text-[13px] font-medium text-muted bg-bg3 border border-white/[0.07] rounded-md px-4 py-[5px]">fast learner</span>
+        <span class="text-[13px] font-medium text-muted bg-bg3 border border-white/[0.07] rounded-md px-4 py-[5px]">UI enthusiast</span>
+        <span class="text-[13px] font-medium text-muted bg-bg3 border border-white/[0.07] rounded-md px-4 py-[5px]">night coder</span>
+      </div>
     </div>
 
   </div>
 </section>
-<section id="contact" class="py-20 px-4 text-center">
-  <h2 class="text-3xl font-bold mb-6">Contact Me</h2>
 
-  <p class="text-gray-400 mb-4">
-    Let's build something amazing together
-  </p>
+<!-- ════════════════════ PROJECTS ════════════════════ -->
+<section id="projects" class="bg-bg2 border-t border-b border-white/[0.07]">
+  <div class="max-w-[1060px] mx-auto px-7 py-24">
 
-  <a href="mailto:emailkamu@gmail.com" class="bg-purple-500 px-6 py-3 rounded-full hover:bg-purple-600 transition">
-    Send Email
-  </a>
-    
+    <div class="fade-up mb-12">
+      <span class="text-[11px] font-semibold tracking-[.18em] uppercase text-accent2">portfolio</span>
+      <h2 class="text-[clamp(28px,4vw,40px)] font-bold tracking-tight leading-tight mt-2 mb-2">Proyek saya</h2>
+      <p class="text-[14px] text-muted">Klik kartu untuk lihat detail.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <div class="project-card bg-bg3 border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer flex flex-col fade-up"
+          data-status="locked"
+           data-title="Echoes Of Melody"
+           data-tags="Unity,Pixelorama"
+           data-desc="Game indie yang dikembangkan dengan Unity dan Pixelorama, menggabungkan musik dan visual yang menarik."
+           data-link="#">
+         
+        <div class="w-full aspect-video bg-bg flex items-center justify-center border-b border-white/[0.07]">
+          <img src="./img/Echoes of Melody.jpeg" class="w-full h-full object-cover"> 
+        </div>
+        <div class="p-6 flex flex-col gap-3 flex-1">
+          <div class="flex flex-wrap gap-[6px]">
+            <span class="text-[11px] font-semibold tracking-wide uppercase text-accent2 bg-accent/10 border border-accent/20 rounded-md px-2 py-[2px]">Unity</span>
+            <span class="text-[11px] font-semibold tracking-wide uppercase text-accent2 bg-accent/10 border border-accent/20 rounded-md px-2 py-[2px]">Pixelorama</span>
+          </div>
+          <h3 class="text-[17px] font-semibold tracking-tight">Echoes Of Melody</h3>
+          <p class="text-[14px] text-muted leading-relaxed flex-1">Game indie yang dikembangkan dengan Unity dan Pixelorama, menggabungkan musik dan visual yang menarik.</p>
+          <p class=" self-start text-[13px] font-semibold text-accent2 bg-transparent border-none cursor-pointer p-0 mt-1">coming soon</p>
+        </div>
+      </div>
+
+      <!--
+        TEMPLATE PROYEK BARU — hapus komentar ini dan isi datanya
+
+      <div class="project-card bg-bg3 border border-white/[0.07] rounded-2xl overflow-hidden cursor-pointer flex flex-col fade-up"
+           data-title="Nama Proyek"
+           data-tags="Tech1,Tech2"
+           data-desc="Deskripsi lengkap proyek kamu."
+           data-link="https://link-proyekmu.com">
+        <div class="w-full aspect-video bg-bg flex items-center justify-center border-b border-white/[0.07]">
+          <img src="screenshot.png" alt="Nama Proyek" class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex flex-col gap-3 flex-1">
+          <div class="flex flex-wrap gap-[6px]">
+            <span class="text-[11px] font-semibold tracking-wide uppercase text-accent2 bg-accent/10 border border-accent/20 rounded-md px-2 py-[2px]">Tech1</span>
+          </div>
+          <h3 class="text-[17px] font-semibold tracking-tight">Nama Proyek</h3>
+          <p class="text-[14px] text-muted leading-relaxed flex-1">Deskripsi singkat.</p>
+          <button class="card-btn self-start text-[13px] font-semibold text-accent2 bg-transparent border-none cursor-pointer p-0 mt-1">Lihat detail →</button>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ SKILLS ════════════════════ -->
+<section id="skills" class="border-t border-white/[0.07]">
+  <div class="max-w-[1060px] mx-auto px-7 py-24">
+
+    <div class="fade-up mb-12">
+      <span class="text-[11px] font-semibold tracking-[.18em] uppercase text-accent2">tech stack</span>
+      <h2 class="text-[clamp(28px,4vw,40px)] font-bold tracking-tight leading-tight mt-2">Yang saya bisa</h2>
+    </div>
+
+    <div class="fade-up grid grid-cols-2 md:grid-cols-4 gap-8">
+
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[.14em] uppercase text-muted mb-4">Frontend</h4>
+        <div class="flex flex-col gap-2">
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>HTML5
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>CSS
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>JavaScript
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>Tailwind CSS
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[.14em] uppercase text-muted mb-4">Backend &amp; DB</h4>
+        <div class="flex flex-col gap-2">
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>Laravel
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>MySQL
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[.14em] uppercase text-muted mb-4">Design</h4>
+        <div class="flex flex-col gap-2">
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>UI/UX Design
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>Figma
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>Video Editing
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="text-[11px] font-semibold tracking-[.14em] uppercase text-muted mb-4">Tools</h4>
+        <div class="flex flex-col gap-2">
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>Git &amp; GitHub
+          </div>
+          <div class="skill-item flex items-center gap-3 px-4 py-[10px] bg-bg2 border border-white/[0.07] rounded-[10px] text-[14px] font-medium">
+            <span class="w-[6px] h-[6px] rounded-full bg-accent flex-shrink-0"></span>VS Code
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ CONTACT ════════════════════ -->
+<section id="contact" class="bg-bg2 border-t border-white/[0.07]">
+  <div class="max-w-[1060px] mx-auto px-7 py-24">
+
+    <div class="fade-up mb-10">
+      <h2 class="text-[clamp(28px,4vw,40px)] font-bold tracking-tight leading-tight mt-2 mb-4">Ngobrol yuk!</h2>
+      <p class="text-[15px] text-muted max-w-[440px] leading-relaxed">
+        Punya proyek, ide, atau sekadar mau kenalan — feel free to reach out.
+      </p>
+    </div>
+
+    <div class="fade-up grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-[700px]">
+
+      <a href="mailto:fattahillahilham899@gmail.com" class="contact-item flex flex-col gap-1 p-5 bg-bg3 border border-white/[0.07] rounded-xl">
+        <span class="text-[11px] font-semibold tracking-[.12em] uppercase text-muted">Email</span>
+        <span class="text-[14px] font-medium">fattahillahilham899@gmail.com</span>
+      </a>
+
+      <a href="https://github.com/ilhamfattahillah" target="_blank" class="contact-item flex flex-col gap-1 p-5 bg-bg3 border border-white/[0.07] rounded-xl">
+        <span class="text-[11px] font-semibold tracking-[.12em] uppercase text-muted">GitHub</span>
+        <span class="text-[14px] font-medium">github.com/ilhamfattahillah</span>
+      </a>
+
+      <a href="https://linkedin.com/in/ilham-fattahillah-elandi" target="_blank" class="contact-item flex flex-col gap-1 p-5 bg-bg3 border border-white/[0.07] rounded-xl">
+        <span class="text-[11px] font-semibold tracking-[.12em] uppercase text-muted">LinkedIn</span>
+        <span class="text-[14px] font-medium">linkedin.com/in/ilham-fattahillah-elandi</span>
+      </a>
+
+      <a href="https://instagram.com/elnd.3" target="_blank" class="contact-item flex flex-col gap-1 p-5 bg-bg3 border border-white/[0.07] rounded-xl">
+        <span class="text-[11px] font-semibold tracking-[.12em] uppercase text-muted">Instagram</span>
+        <span class="text-[14px] font-medium">@elnd.3</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer class="border-t border-white/[0.07] py-7 text-center text-[13px] text-muted">
+  dibuat oleh <strong class="text-[#e8e8f0] font-semibold">Ilham</strong> &mdash; 2026
+</footer>
+
+<!-- ════════════════════ MODAL ════════════════════ -->
+<div class="modal-bg fixed inset-0 bg-black/75 z-[200] flex items-center justify-center p-6" id="modalBg" aria-hidden="true" style="backdrop-filter:blur(8px)">
+  <div class="modal-box bg-bg3 border border-white/[0.07] rounded-[18px] max-w-[580px] w-full overflow-hidden relative">
+
+    <button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-bg2 border border-white/[0.07] text-muted text-lg flex items-center justify-center cursor-pointer z-10 hover:bg-accent hover:text-white transition-all" id="modalClose">&times;</button>
+
+    <div class="w-full aspect-video bg-bg2 border-b border-white/[0.07] flex items-center justify-center text-xs font-semibold tracking-widest text-muted uppercase" id="modalThumb"></div>
+
+    <div class="p-7">
+      <div class="flex flex-wrap gap-[6px] mb-4" id="modalTags"></div>
+      <h2 class="text-[22px] font-bold tracking-tight mb-3" id="modalTitle"></h2>
+      <p class="text-[14px] text-muted leading-relaxed mb-6" id="modalDesc"></p>
+      <a class="btn-main inline-block bg-accent text-white text-sm font-semibold px-6 py-3 rounded-xl" id="modalLink" href="#" target="_blank">Buka Proyek</a>
+    </div>
+
+  </div>
+</div>
+
+
 </body>
 </html>
