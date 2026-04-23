@@ -1,7 +1,3 @@
-/* ──────────────────────────────────────
-   main.js — Portfolio Ilham
-────────────────────────────────────── */
-
 document.addEventListener('DOMContentLoaded', () => {
 
   gsap.registerPlugin(ScrollTrigger);
@@ -60,14 +56,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
 
   /* ── PROJECT CARDS STAGGER ── */
-  gsap.from('.project-card', {
-    scrollTrigger: { trigger: '#projects', start: 'top 80%' },
-    y: 35,
-    opacity: 0,
-    duration: 0.6,
-    stagger: 0.12,
-    ease: 'power2.out',
-  });
+  gsap.fromTo('.project-card', 
+    { opacity: 0, y: 35 },
+    { 
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      stagger: 0.12,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: '#projects', start: 'top 80%' }
+    }
+  );
 
   /* ── SKILL ITEMS STAGGER ── */
   gsap.from('.skill-item', {
